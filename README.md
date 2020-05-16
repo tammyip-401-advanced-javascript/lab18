@@ -5,7 +5,7 @@ Project Name: Socket.io
 Author: Tammy Ip
 
 Links and Resources (see below)
-submission PR: `https://github.com/tammyip-401-advanced-javascript/lab17/pull/1`
+submission PR: `https://github.com/tammyip-401-advanced-javascript/lab18/pull/1`
 
 Documentation
 Events: `https://github.com/Gozala/events#readme`
