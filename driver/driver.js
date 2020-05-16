@@ -1,21 +1,27 @@
 'use strict'
 
 const sioc = require('socket.io-client');
-const socket = sioc.connect('http://localhost:3000/csps');
+const driverSocket = sioc.connect('http://localhost:3000/csps');
 
+// driverSocket.emit('join', 'driver');
 
-socket.on('pickup', (payload) => {
+driverSocket.on('pickup', (payload) => {
 
   setTimeout(() => {
     console.log(`picked up ${payload.orderID}`);
-    socket.emit('inTransit', payload.orderID);
+    driverSocket.emit('inTransit', payload);
   }, 1000);
-});
-
-socket.on('inTransit', (payload) => {
 
   setTimeout(() => {
     console.log(`delivered ${payload.orderID}`);
-    socket.emit('delivered', payload);
+    driverSocket.emit('delivered', payload);
   }, 3000);
 });
+
+// driverSocket.on('inTransit', (payload) => {
+
+//   setTimeout(() => {
+//     console.log(`delivered ${payload.orderID}`);
+//     driverSocket.emit('delivered', payload);
+//   }, 3000);
+// });

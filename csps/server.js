@@ -2,9 +2,9 @@
 
 const sio = require('socket.io');
 const server = sio(3000);
-const csps = server.of('/csps');
+const cspsIO = server.of('/csps');
 
-csps.on('connection', (socket) => {
+cspsIO.on('connection', (socket) => {
   console.log('connected to socket', socket.id);
 
   //emit a join event that will tell the server to put this socket into a specified room
@@ -17,26 +17,36 @@ csps.on('connection', (socket) => {
   });
 
   socket.on('pickup', (payload) => {
-    const keys = Object.keys(payload);
-    keys.forEach(key => {
-      console.log(`- ${key}: ${payload[key]}`);
-    })
-    csps
-      .to('flower-shop')
-      .emit('inTransit', payload)
-      .emit('delivered', payload)
 
-      .to('candy-shop')
-      .emit('inTransit', payload)
-      .emit('delivered', payload);
+    console.log(payload)
+    // const keys = Object.keys(payload);
+    // keys.forEach(key => {
+    //   console.log(`- ${key}: ${payload[key]}`);
+    // })
+
+    cspsIO.emit('pickup', payload)
+    // cspsIO
+    //   .to('flower-shop')
+    //   .emit('inTransit', payload)
+    //   .emit('delivered', payload)
+
+    //   .to('candy-shop')
+    //   .emit('inTransit', payload)
+    //   .emit('delivered', payload);
   });
 
   socket.on('inTransit', (payload) => {
-    console.log(payload);
+    console.log('inTransit order', payload.orderID);
+    cspsIO.to(payload.store).emit('inTransit', payload)
   })
 
-  socket.on('confirmation', (payload) => {
-    console.log(payload);
+  // socket.on('confirmation', (payload) => {
+  //   console.log(payload);
+  // })
+
+  socket.on('delivered', (payload) => {
+    console.log('Delivered order', payload.orderID);
+    cspsIO.to(payload.store).emit('delivered', payload)
   })
 });
 
